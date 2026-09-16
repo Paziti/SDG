@@ -379,6 +379,9 @@
   .foot-col a,.foot-col span{color:rgba(250,247,240,.62);transition:color .2s ease}
   .foot-col a:hover{color:var(--gold-bright)}
   .foot-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding:22px 0;font-size:.85rem;color:rgba(250,247,240,.42)}
+  .foot-powered{text-align:center;padding:16px 0;border-top:1px solid rgba(250,247,240,.08);font-size:.78rem;color:rgba(250,247,240,.35)}
+  .foot-powered a{color:rgba(250,247,240,.55);font-weight:500;transition:color .2s ease}
+  .foot-powered a:hover{color:var(--gold-bright)}
   @media(max-width:760px){
     .foot-grid{grid-template-columns:1fr 1fr;gap:36px 24px}
     .foot-brand{grid-column:1 / -1}
@@ -717,7 +720,7 @@
       </details>
       <details class="faq-item">
         <summary>¿Cómo empieza el proceso con SDG?<span class="faq-icon" aria-hidden="true"></span></summary>
-        <div class="faq-a"><div class="faq-a-inner"><p>Con un diagnóstico inicial sin cargo, cara a cara, para entender la realidad de tu organización antes de proponer nada.</p></div></div>
+        <div class="faq-a"><div class="faq-a-inner"><p>Con un diagnóstico inicial, cara a cara, para entender la realidad de tu organización antes de proponer nada.</p></div></div>
       </details>
       <details class="faq-item">
         <summary>¿Certifican con norma ISO 9001 o solo asesoran?<span class="faq-icon" aria-hidden="true"></span></summary>
@@ -786,6 +789,9 @@
     <span>&copy; <span id="footYear">2026</span> SDG Consultora. Todos los derechos reservados.</span>
     <span>Procesos &middot; Desarrollo organizacional &middot; RRHH &middot; Calidad</span>
   </div>
+  <div class="wrap foot-powered">
+    <span>Powered by <a href="https://inerpaz.com.ar" target="_blank" rel="noopener">INERPAZ</a> &amp; <a href="https://nexofero.com.ar" target="_blank" rel="noopener">NEXOFERO</a></span>
+  </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js"></script>
@@ -797,9 +803,9 @@
   const footYear=document.getElementById('footYear');
   if(footYear) footYear.textContent=new Date().getFullYear();
 
-  /* ---- Lenis smooth scroll (desktop pointer only, respects reduced motion) ---- */
+  // Scroll suave con Lenis. Solo se activa en desktop con mouse y si el usuario no pidió reducir animaciones.
   let lenis = null;
-  const scrollEasing = (t)=>1-Math.pow(1-t,3); /* easeOutCubic: snappier tail than Lenis' default expo curve */
+  const scrollEasing = (t)=>1-Math.pow(1-t,3); // Frena más rápido al final que la curva por defecto de Lenis
   if(!reduceMotion && fineHover && window.Lenis){
     lenis = new window.Lenis({
       allowNestedScroll: true,
@@ -812,7 +818,7 @@
     });
   }
 
-  /* ---- Anchor links: route through Lenis (CSS scroll-margin-top handles header offset) + focus management ---- */
+  // Enlaces internos (#ancla): si Lenis está activo, el scroll pasa por él y al llegar se enfoca la sección destino
   document.querySelectorAll('a[href^="#"]:not(.skip-link)').forEach(a=>{
     a.addEventListener('click',(e)=>{
       if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||e.button!==0) return;
@@ -831,7 +837,7 @@
     });
   });
 
-  /* ---- Mobile menu ---- */
+  // Menú de navegación en mobile
   const burger=document.getElementById('burger');
   const menu=document.getElementById('menu');
   function openMenu(){ menu.classList.add('open'); burger.classList.add('open'); burger.setAttribute('aria-expanded','true'); }
@@ -840,7 +846,7 @@
   menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeMenu));
   document.addEventListener('keydown',(e)=>{ if(e.key==='Escape' && menu.classList.contains('open')){ closeMenu(); burger.focus(); } });
 
-  /* ---- Header scroll state + hero scroll-cue ---- */
+  // Cambia el estilo del header al bajar y oculta el indicador de scroll del hero
   const header=document.querySelector('header');
   let headerTicking=false;
   function updateHeader(){
@@ -852,7 +858,7 @@
   updateHeader();
   window.addEventListener('scroll', ()=>{ if(!headerTicking){ requestAnimationFrame(updateHeader); headerTicking=true; } }, {passive:true});
 
-  /* ---- Active nav link on scroll + sliding indicator ---- */
+  // Marca como activo el link del menú según la sección visible y desliza el indicador hasta él
   const navLinks=[...menu.querySelectorAll('a[href^="#"]')];
   const navMap=navLinks.map(a=>({link:a,el:document.getElementById(a.getAttribute('href').slice(1))})).filter(x=>x.el);
   const navIndicator=document.querySelector('.nav-indicator');
@@ -881,7 +887,7 @@
     navMap.forEach(x=>navObserver.observe(x.el));
   }
 
-  /* ---- Hero hex-field parallax (desktop pointer only) ---- */
+  // Efecto parallax de los hexágonos del fondo del hero, solo en desktop con mouse
   const hexField=document.querySelector('.hex-field');
   if(hexField && !reduceMotion && fineHover){
     let pTicking=false;
@@ -893,7 +899,7 @@
     window.addEventListener('scroll', ()=>{ if(!pTicking){ requestAnimationFrame(updateParallax); pTicking=true; } }, {passive:true});
   }
 
-  /* ---- Metodología: scroll-driven stepper + sticky mockup card ---- */
+  // Sección Metodología: el paso activo cambia a medida que se hace scroll y la tarjeta fija lo acompaña
   const metoSteps=document.getElementById('metoSteps');
   const stepEls = metoSteps ? [...metoSteps.querySelectorAll('.meto-step')] : [];
   const cardEls = [...document.querySelectorAll('.meto-card')];
@@ -924,7 +930,7 @@
     }
   }
 
-  /* ---- Reseñas: carousel, dots, keyboard ---- */
+  // Carrusel de reseñas: flechas, puntos de posición y navegación con teclado
   const revTrack=document.getElementById('revTrack');
   const revPrev=document.getElementById('revPrev');
   const revNext=document.getElementById('revNext');
@@ -974,7 +980,7 @@
     }
   }
 
-  /* ---- Scroll progress bar ---- */
+  // Barra que muestra el progreso de lectura de la página
   const scrollProgress=document.getElementById('scrollProgress');
   if(scrollProgress){
     let spTicking=false;
@@ -990,7 +996,7 @@
     window.addEventListener('resize', updateProgress);
   }
 
-  /* ---- Animated stat counters ---- */
+  // Contadores que suben animados hasta el número final cuando entran en pantalla
   const counters=[...document.querySelectorAll('.count-num')];
   if(counters.length){
     const fmt=(value,dec)=>new Intl.NumberFormat('es-AR',{minimumFractionDigits:dec,maximumFractionDigits:dec}).format(value);
@@ -1020,7 +1026,7 @@
     }
   }
 
-  /* ---- Magnetic primary buttons (rAF-throttled) ---- */
+  // Botones principales que se desplazan levemente hacia el cursor (limitado con requestAnimationFrame)
   if(fineHover && !reduceMotion){
     document.querySelectorAll('.btn-primary:not(.no-magnetic)').forEach(btn=>{
       btn.classList.add('magnetic');
@@ -1040,7 +1046,7 @@
     });
   }
 
-  /* ---- Servicios: cursor-follow glow (rAF-throttled) ---- */
+  // Sección Servicios: brillo que sigue al cursor dentro de cada tarjeta (limitado con requestAnimationFrame)
   if(fineHover && !reduceMotion){
     document.querySelectorAll('.serv').forEach(card=>{
       let rect=null, pending=null, ticking=false;
@@ -1057,7 +1063,7 @@
     });
   }
 
-  /* ---- FAQ: smooth height animation via WAAPI, native <details> semantics kept ---- */
+  // FAQ: anima la apertura y el cierre de cada pregunta sin perder el comportamiento nativo de <details>
   document.querySelectorAll('.faq-item').forEach((item)=>{
     const summary=item.querySelector('summary');
     const content=item.querySelector('.faq-a');
